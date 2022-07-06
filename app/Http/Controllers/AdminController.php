@@ -14,9 +14,19 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.home');
+        if ($request->ajax()) {
+            //get all admin users (staffs)
+            $users = User::select("*")
+            ->get();
+
+            return response()->json([
+                'success' => 200,
+                'users' => $users,
+            ]);
+        }
+        return view("admin.home");
     }
 
     /**
@@ -47,7 +57,7 @@ class AdminController extends Controller
         }else {
             return response()->json([
                 'message' => 'Staff Not Created',
-                'status' => 401,
+                'status' => 400,
             ]);
         }
     }
@@ -60,7 +70,11 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return response()->json([
+            'status' => 200,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -71,7 +85,11 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -81,9 +99,16 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StaffRegister $request, $id)
     {
-        //
+        $user = User::find($id);
+        $data = $request->all();
+        $user->update($data);
+        return response()->json([
+            'success' => 200,
+            'message' => 'User Successfully Updated'
+        ]);
+
     }
 
     /**
@@ -94,6 +119,11 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+        return response()->json([
+            'success' => 200,
+            'message' => 'User Successfully Deleted',
+        ]);
     }
 }

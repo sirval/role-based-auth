@@ -28,6 +28,7 @@ Route::middleware([Admin::class])->group(function()
 {
     Route::get('/admin/home', [AdminController::class, 'index'])->name('admin-home');
     Route::post('/admin/home', [AdminController::class, 'store'])->name('store-staff');
+    Route::get('/admin/home', [AdminController::class, 'show'])->name('show');
 });
 
 //staff middleware protected routes

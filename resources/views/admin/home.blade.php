@@ -2,19 +2,9 @@
 @section('css')
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-  <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css">
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
-  <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
-  <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
   <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
- 
-  <link rel="stylesheet" href="../../plugins/sweetalert2.min.css">
+  <link rel="stylesheet" href="../../plugins/sweetalert2/sweetalert2.min.css">
 @endsection
 @section('content')
 @include('layouts.partials.sidebar')
@@ -41,7 +31,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">New Staff</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">New User</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -54,8 +44,8 @@
                         <div class="form-group">
                           <select class="form-control" name="role_id" id="role_id">
                             <option value="">--Select User Role</option>
-                            <option value="2">Staff</option>
-                            {{-- <option value="2">Staff</option> --}}
+                            <option value="2">Admin</option>
+                            <option value="3">User</option>
                           </select>
                         </div>
 
@@ -66,11 +56,12 @@
                         <div class="form-group">
                           <input type="password" class="form-control"  name="password" id="password" placeholder="Password">
                         </div>
-                      <button class="btn btn-primary" name="submit" type="submit">save</button>
-                    </form>
+                     
                 </div>
                 <div class="modal-footer">
+                  <button class="btn btn-primary" name="submit" type="submit">save</button>
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </form>
                   {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                 </div>
               </div>
@@ -83,38 +74,21 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <button type="button" class="btn btn-primary btn-sm float-right" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 New User
-              </button>
-                <table id="example1" class="table table-bordered table-striped">
+              </button><br><br>
+                <table style="color: beige !important" class="table table-bordered ">
                     <thead>
                         <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Can</th>
+                          <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 4.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td> 4</td>
-                        <td>X</td>
-                        </tr>
-                        <tr>
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td>5</td>
-                        <td>C</td>
-                        </tr>
+                    <tbody style="color: beige !important" id="tblBody">
+                        
                     </tbody>
                 </table>
             </div>
@@ -128,42 +102,94 @@
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-{{-- <script src="../../plugins/jquery-knob/jquery.knob.min.js"></script> --}}
-{{-- <script src="../../plugins/moment/moment.min.js"></script> --}}
-{{-- <script src="../../plugins/daterangepicker/daterangepicker.js"></script> --}}
-{{-- <script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script> --}}
-{{-- <script src="../../plugins/summernote/summernote-bs4.min.js"></script> --}}
-{{-- <script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script> --}}
 <script src="../../dist/js/adminlte.js"></script>
-<script src="../../dist/js/pages/dashboard.js"></script>
 <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="../../plugins/jszip/jszip.min.js"></script>
-<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
-<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="../../plugins/sweetalert2/sweetalert2.all.min.js"></script>
+
 
 <script>
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
+  function getUsers(data) {
+    $.ajax({
+        type: "GET",
+        url: "{{ route('admin-home') }}",
+        dataType: "json",
+        success:function(response){
+          tableView(response);
+        },
+        error:function(error){
+          console.log(error);
+        }
     });
+  }
+
+  function tableView(response) {
+    var tableBlade = "";
+    var userAction = "";
+    var can = "";
+    var i = 1;
+    if (response.users.length <= 0) {
+      tableBlade += `<tr class="removeRow">
+                        <td colspan="5">No Available User</td>
+                    </tr>`;
+    }
+    $.each(response.users, function(key, value) {
+      var name = value.name;
+      var email = value.email;
+      var role = value.role_id;
+
+      if (role == 1) {
+        userAction = `<button class="btn btn-info btn-sm">View</button>`;
+        can = `<span class="badge badge-primary">Create</span>
+              <span class="badge badge-info">View</span>
+              <span class="badge badge-warning">Edit</span>
+              <span class="badge badge-danger">Delete</span>`;
+      }
+      if (role == 2){
+        userAction = `<button class="btn btn-info btn-sm">View</button>
+                      <button class="btn btn-primary btn-sm">Edit</button>
+                      <button class="btn btn-danger btn-sm">Delete</button>`;
+
+        can = `<span class="badge badge-info">View</span>
+              <span class="badge badge-warning">Edit</span>`;
+      }
+      if (role == 3) {
+        userAction = `<button class="btn btn-info btn-sm">View</button>
+                      <button class="btn btn-primary btn-sm">Edit</button>
+                      <button class="btn btn-danger btn-sm">Delete</button>`;
+
+        can = `<span class="badge badge-info">View</span>`;
+      }
+      
+      tableBlade += `<tr class="removeRow">
+                        <td>${i++}</td>
+                        <td>${name}</td>
+                        <td>${email}</td>
+                        <td>${can}</td>
+                        <td>${userAction}</td>
+                    </tr>`;
+    });
+    $('.removeRow').remove();
+    $('#tblBody').append(tableBlade);
+  }
+
+
+  $(function () {
+    getUsers(); //get table view
+
+    // $("#example1").DataTable({
+    //   "responsive": true, "lengthChange": false, "autoWidth": false,
+    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    //   }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    //   $('#example2').DataTable({
+    //     "paging": true,
+    //     "lengthChange": false,
+    //     "searching": false,
+    //     "ordering": true,
+    //     "info": true,
+    //     "autoWidth": false,
+    //     "responsive": true,
+    // });
   });
 
 $(function () {
@@ -191,12 +217,17 @@ $(function () {
           },
           dataType: "json",
           success:function(response){
-            if (response.message) {
-              console.log(response);
-            }
+            getUsers(response);
+          //   if (response.status == 200) {
+          //     Swal.fire("Sucesss", response.message, "success");
+          //   }
+          // },error:function(error){
+          //   Swal.fire("Error", , "error");
           },
       });
   });
+
+  
 });
   </script>
 @endsection
