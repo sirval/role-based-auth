@@ -109,7 +109,9 @@
 
 
 <script>
-  function getUsers(data) {
+  const base_url = {!! json_encode(url('/')) !!}
+
+  function getUsers() {
     $.ajax({
         type: "GET",
         url: "{{ route('admin-home') }}",
@@ -134,100 +136,125 @@
                     </tr>`;
     }
     $.each(response.users, function(key, value) {
+      var id = value.id;
       var name = value.name;
       var email = value.email;
       var role = value.role_id;
-
       if (role == 1) {
-        userAction = `<button class="btn btn-info btn-sm">View</button>`;
+        userAction = `<button data-role="${role}" data-id="${id}" class="btn btn-info btn-sm superadmin_view">View</button>`;
         can = `<span class="badge badge-primary">Create</span>
               <span class="badge badge-info">View</span>
               <span class="badge badge-warning">Edit</span>
               <span class="badge badge-danger">Delete</span>`;
       }
       if (role == 2){
-        userAction = `<button class="btn btn-info btn-sm">View</button>
-                      <button class="btn btn-primary btn-sm">Edit</button>
-                      <button class="btn btn-danger btn-sm">Delete</button>`;
+        userAction = `<button data-role="${role}" data-id="${id}" class="btn btn-info btn-sm superadmin_view ">View</button>
+                      <button data-role="${role}" data-id="${id}" class="btn btn-primary btn-sm superadmin_edit">Edit</button>
+                      <button data-role="${role}" data-id="${id}" onclick="delete_me(${role}, ${id})" class="btn btn-danger btn-sm superadmin_delete">Delete</button>`;
 
         can = `<span class="badge badge-info">View</span>
               <span class="badge badge-warning">Edit</span>`;
       }
       if (role == 3) {
-        userAction = `<button class="btn btn-info btn-sm">View</button>
-                      <button class="btn btn-primary btn-sm">Edit</button>
-                      <button class="btn btn-danger btn-sm">Delete</button>`;
+        userAction = `<button data-role="${role}" data-id="${id}" class="btn btn-info btn-sm superadmin_view">View</button>
+                      <button data-role="${role}" data-id="${id}" class="btn btn-primary btn-sm superadmin_edit">Edit</button>
+                      <button data-role="${role}" data-id="${id}" onclick="delete_me(${role}, ${id})" class="btn btn-danger btn-sm superadmin_delete">Delete</button>`;
 
         can = `<span class="badge badge-info">View</span>`;
       }
       
-      tableBlade += `<tr class="removeRow">
+        tableBlade += `<tr class="removeRow">
                         <td>${i++}</td>
                         <td>${name}</td>
                         <td>${email}</td>
                         <td>${can}</td>
                         <td>${userAction}</td>
-                    </tr>`;
+                      </tr>`;
     });
     $('.removeRow').remove();
     $('#tblBody').append(tableBlade);
   }
 
+  //delete function
+  function delete_me(role, id) {
+    console.log(role+" and "+id);
+    //check if user is authorized to delete
+    if (role != 1 ) {
+      Swal.fire("Warning", "Action restricted from you", "warning");
+    }
+    
+    //confirm action
+    Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this! ",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "DELETE",
+          url: `${base_url}/admin/${id}/delete`,
+          data:{
+              '_token':$('meta[name="csrf-token"]').attr('content'),
+              },
+          dataType: "json",
+          success:function(response){
+            if (response.success == 200) {
+              Swal.fire("Success", "User Deleted Successfully", "success");
+            }else{
+              Swal.fire("Error", response.message, "error");
+            }
+            getUsers();
+          },
+          error:function(error){
+            console.log(error);
+          }
+        });
+      }
+    });
+  }
+
 
   $(function () {
     getUsers(); //get table view
+ 
+    $('#saveStaff').click(function(e) {
+      e.preventDefault();
+        let formData = [
+          // $('#staffPics').val(),
+          $('#role_id').val(),
+          $('#name').val(),
+          $('#email').val(),
+          $('#password').val(),
+        ];
+        
+        $.ajaxSetup({
+          headers:{
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+        $.ajax({
+          type: "POST",
+            url: "{{ route('store-staff') }}",
+            data: {
+                data: formData,
+            },
+            dataType: "json",
+            success:function(response){
+              getUsers();
+              if (response.status == 200) {
+                Swal.fire("Sucesss", response.message, "success");
+              }
+            },error:function(error){
+              Swal.fire("Error","" , "error");
+            },
+        });
+    });
 
-    // $("#example1").DataTable({
-    //   "responsive": true, "lengthChange": false, "autoWidth": false,
-    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    //   }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    //   $('#example2').DataTable({
-    //     "paging": true,
-    //     "lengthChange": false,
-    //     "searching": false,
-    //     "ordering": true,
-    //     "info": true,
-    //     "autoWidth": false,
-    //     "responsive": true,
-    // });
-  });
-
-$(function () {
-  $('#saveStaff').click(function(e) {
-    e.preventDefault();
-      let formData = [
-        // $('#staffPics').val(),
-        $('#role_id').val(),
-        $('#name').val(),
-        $('#email').val(),
-        $('#password').val(),
-      ];
-      
-     console.log(formData);
-      $.ajaxSetup({
-        headers:{
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-      $.ajax({
-        type: "POST",
-          url: "{{ route('store-staff') }}",
-          data: {
-              data: formData,
-          },
-          dataType: "json",
-          success:function(response){
-            getUsers(response);
-          //   if (response.status == 200) {
-          //     Swal.fire("Sucesss", response.message, "success");
-          //   }
-          // },error:function(error){
-          //   Swal.fire("Error", , "error");
-          },
-      });
-  });
-
-  
+   
 });
   </script>
 @endsection

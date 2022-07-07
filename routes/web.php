@@ -27,14 +27,18 @@ Route::get('/', function () {
 Route::middleware([Admin::class])->group(function()
 {
     Route::get('/admin/home', [AdminController::class, 'index'])->name('admin-home');
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('create');
     Route::post('/admin/home', [AdminController::class, 'store'])->name('store-staff');
-    Route::get('/admin/home', [AdminController::class, 'show'])->name('show');
+    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('edit');
+    Route::post('/admin/{id}/update', [AdminController::class, 'update'])->name('update');
+    Route::delete('/admin/{id}/delete', [AdminController::class, 'destroy']);
 });
 
 //staff middleware protected routes
 Route::middleware([Staff::class])->group(function()
 {
     Route::get('/staff/home', [StaffController::class, 'index'])->name('staff-home');
+    Route::post('/staff/home', [StaffController::class, 'store'])->name('store');
 });
 Auth::routes();
 Route::get('/home', [HomeController::class, 'index']);

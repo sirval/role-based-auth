@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StaffRegister;
-use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,8 +14,18 @@ class StaffController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            //get all admin users (staffs)
+            $users = User::select("*")
+            ->get();
+
+            return response()->json([
+                'success' => 200,
+                'users' => $users,
+            ]);
+        }
         return view('staff.home');
     }
 
@@ -37,6 +47,19 @@ class StaffController extends Controller
      */
     public function store(StaffRegister $request)
     {
+        $newStaff = User::create($request->all());
+        
+        if ($newStaff) {
+            return response()->json([
+                'message' => 'Staff Created Successfully',
+                'status' => 200,
+            ]);
+        }else {
+            return response()->json([
+                'message' => 'Staff Not Created',
+                'status' => 400,
+            ]);
+        }
         
     }
 
