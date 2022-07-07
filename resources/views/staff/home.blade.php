@@ -190,39 +190,6 @@
     if (role != 1 ) {
       Swal.fire("Warning", "Action restricted from you", "warning");
     }
-    
-    //confirm action
-    Swal.fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this! ",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          type: "DELETE",
-          url: `${base_url}/staff/${id}/delete`,
-          data:{
-              '_token':$('meta[name="csrf-token"]').attr('content'),
-              },
-          dataType: "json",
-          success:function(response){
-            if (response.success == 200) {
-              Swal.fire("Success", "User Deleted Successfully", "success");
-            }else{
-              Swal.fire("Error", response.message, "error");
-            }
-            getUsers();
-          },
-          error:function(error){
-            console.log(error);
-          }
-        });
-      }
-    });
   }
 
 
