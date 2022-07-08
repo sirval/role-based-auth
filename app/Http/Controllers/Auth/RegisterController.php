@@ -70,7 +70,7 @@ class RegisterController extends Controller
             'role_id' => $data['role_id'],
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
+            'password' => Hash::make($data['password']),
         ]);
     }
     public function redirectTo()

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StaffRegister;
-use App\Models\Staff;
 use App\Models\User;
+use App\Models\Staff;
 use Illuminate\Http\Request;
+use App\Http\Requests\StaffRegister;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -47,8 +48,13 @@ class AdminController extends Controller
      */
     public function store(StaffRegister $request)
     {
-        $newStaff = User::create($request->all());
-        
+        $newStaff = User::create([
+            'role_id' => $request['role_id'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+        ]);
+       
         if ($newStaff) {
             return response()->json([
                 'message' => 'Staff Created Successfully',
