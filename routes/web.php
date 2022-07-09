@@ -52,7 +52,7 @@ Route::get('/', function () {
 
 
 //admin middleware protected routes
-Route::middleware([Admin::class])->group(function()
+Route::middleware(['admin', 'verified'])->group(function()
 {
     Route::get('/admin/home', [AdminController::class, 'index'])->name('admin-home');
     Route::get('/admin/create', [AdminController::class, 'create'])->name('create');
